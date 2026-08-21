@@ -12,5 +12,5 @@ tree, and real input — clicking, typing, menus, windows — through
   sessions load to wield peekaboo well.
 
 Part of the agent* fleet under `~/code`: AgentStart
-(`~/code/agentstart`) invokes the installer and ships the skill globally
-through its per-checkout skill scan.
+(`~/code/agentstart`) invokes the installer and ships the skill through its
+private core plugin scan.
