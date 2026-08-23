@@ -13,4 +13,4 @@ tree, and real input — clicking, typing, menus, windows — through
 
 Part of the agent* fleet under `~/code`: AgentStart
 (`~/code/agentstart`) invokes the installer and ships the skill through its
-private core plugin scan.
+default `common` capability-pack scan.
