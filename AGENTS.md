@@ -56,8 +56,8 @@ synchronization path here.
 - Installer changes: rerun `scripts/install.sh --install` here, then
   AgentStart's convergence check
   (`~/code/agentstart/scripts/install.sh --install`).
-- Skill changes: rerun AgentStart's default common capability-pack scan
-  (`~/code/agentstart/scripts/sync-skills`), then confirm the installed pack
+- Skill changes: rerun AgentStart's fixed fleet-resource scan
+  (`~/code/agentstart/scripts/sync-skills`), then confirm the installed resource
   copy matches this checkout.
 
 ## The fleet
@@ -65,12 +65,12 @@ synchronization path here.
 This checkout is one of the agent* fleet under `~/code`. Shared machinery
 lives in two siblings, and some changes here must cascade:
 
-- Skills under `skills/<name>/` ship into AgentStart's default `common`
-  capability pack (`~/code/agentstart/scripts/sync-skills`, run six-hourly
-  by the scheduled updater). AgentLaunch composes the pack into managed
-  sessions: Claude Code exposes `/agent:<name>`, while Codex uses `$<name>`
-  and Pi uses `/<name>`. A SKILL.md edit is live within six hours, or on
-  demand by running that script. Whether a new skill earns a TOOLS.md
+- Skills under `skills/<name>/` ship into AgentStart's fixed private
+  fleet resources (`~/code/agentstart/scripts/sync-skills`, run six-hourly
+  by the scheduled updater). AgentLaunch loads them into every managed
+  session: Claude Code exposes `/agent:<name>`, Codex uses
+  `$agent:<name>`, and Pi uses `/<name>`. A SKILL.md edit is live within
+  six hours, or on demand by running that script. Whether a new skill earns a TOOLS.md
   advertisement line is a deliberate decision —
   `agentwiki get tool-advertisement-policy`.
 - Adding or removing a call to another fleet tool changes the fleet map:
