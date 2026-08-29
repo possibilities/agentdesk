@@ -45,8 +45,8 @@ synchronization path here.
   bridge-evidence workaround, which is dated and machine-verified.
 - The harness is the agent: `peekaboo agent` (its own AI loop),
   `peekaboo mcp` (MCP server registration), and `peekaboo browser`
-  (Chrome control) stay unused. Web pages belong to agentweb's `browser`
-  skill.
+  (Chrome control) stay unused. Web pages belong to the fleet's `browser`
+  skill, owned by Agentbrowse.
 - Upstream reference is https://peekaboo.sh and the in-binary
   `peekaboo learn`; clone openclaw/Peekaboo into `~/src` only when source
   is genuinely needed.
