@@ -48,7 +48,8 @@ synchronization path here.
   (Chrome control) stay unused. Web pages belong to the fleet's `browser`
   skill, owned by Agentbrowse.
 - Upstream reference is https://peekaboo.sh and the in-binary
-  `peekaboo learn`; clone openclaw/Peekaboo into `~/src` only when source
+  `peekaboo learn`; clone openclaw/Peekaboo into
+  `~/source/openclaw--Peekaboo` only when source
   is genuinely needed.
 
 ## After changing this repository
