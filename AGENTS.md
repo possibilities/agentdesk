@@ -2,64 +2,60 @@
 
 ## What this repository is
 
-Agentdesk makes the Mac's own GUI a fleet capability — seen, read, and
-driven by agent sessions. It owns two things and nothing else:
+Agentdesk is the fleet-owned stdio MCP bridge to Codex Computer Use. It owns:
 
-- `scripts/install.sh` — the installation contract for peekaboo
-  (openclaw/Peekaboo): install or upgrade the CLI from its official
-  Homebrew tap (`steipete/tap`), then gate on the capability serving —
-  the required TCC permissions granted and a screen capture delivered.
-- `skills/desktop/` — the source of the `desktop` agent skill, the runbook
-  that teaches agents to wield peekaboo: the observe → act → verify loop,
-  input etiquette on a live desk, and the operational failure modes. The
-  `skills/<name>/` layout is the convention AgentStart's per-checkout skill
-  scan discovers.
+- `agentdesk mcp`, a transparent proxy for the current Codex
+  `unified-computer-use` / `cua_repl` tools;
+- the fleet CLI contract and a read-only `doctor`;
+- `scripts/install.sh`, the hardened editable-command installer and retained
+  Peekaboo retirement contract;
+- `skills/desktop/`, the runbook shipped by AgentStart's normal fleet skill
+  scan.
 
-AgentStart (`~/code/agentstart`) owns AI-stack installation and invokes
-both: the installer through this repository's `scripts/install.sh
---install` (a direct block beside agentchats' — the `install-agent-clis`
-loop is for checkouts that ship their own CLIs, not wrappers over
-third-party binaries), the skill through the `agent*` checkout skill scan
-(`scripts/sync-skills`). Do not add a second installation or
-synchronization path here.
+AgentStart (`~/code/agentstart`) owns the one checked-in MCP inventory, renders
+it for harnesses, invokes this checkout's installer, and ships its skill. Do not
+add another registry, discovery scan, HTTP gateway, service, or harness config
+writer here.
 
-## Conventions
+## Runtime boundaries
 
-- The installer follows the fleet's helper style: bash,
-  `set -euo pipefail`, a `die` helper, `--check` prints the plan without
-  changing the system. A machine without this checkout is a skip inside
-  AgentStart, not a failure; a present checkout that fails to install is a
-  real error and propagates.
-- peekaboo tracks the latest tap release deliberately, like every
-  third-party binary the fleet installs; nothing digest-locks it.
-- TCC grants (Screen Recording, Accessibility) are the human's act. The
-  installer verifies and refuses with the exact System Settings steps; it
-  never grants. The capture gate runs `--no-remote` deliberately: it
-  proves the grant and the capture engine without betting the install on
-  the on-demand daemon's bridge attribution, which has its own failure
-  modes the skill documents.
-- `skills/desktop/SKILL.md` documents the CLI as installed, grounded in
-  real command output. After a peekaboo upgrade changes behavior, reverify
-  the skill's claims against the live CLI (`peekaboo learn`,
-  `peekaboo help <command>`) before editing prose — especially the
-  bridge-evidence workaround, which is dated and machine-verified.
-- The harness is the agent: `peekaboo agent` (its own AI loop),
-  `peekaboo mcp` (MCP server registration), and `peekaboo browser`
-  (Chrome control) stay unused. Web pages belong to the fleet's `browser`
-  skill, owned by Agentbrowse.
-- Upstream reference is https://peekaboo.sh and the in-binary
-  `peekaboo learn`; clone openclaw/Peekaboo into
-  `~/source/openclaw--Peekaboo` only when source
-  is genuinely needed.
+- Use the supported `codex app-server` stdio JSON-RPC interface. One Agentdesk
+  MCP process owns and reaps one child and one ephemeral thread.
+- Proxy the installed `cua_repl` catalog. Do not vendor `@oai/sky`, the native
+  service, plugin files, or a copied tool description.
+- Preserve downstream input schemas, descriptions, structured content, image
+  content, errors, and elicitation metadata. Application consent is a user
+  decision: forward it and fail closed when the MCP client cannot answer.
+- Serialize calls because the CUA JavaScript session is persistent. Propagate
+  cancellation by stopping the owned child and never retry an uncertain GUI
+  action automatically.
+- Do not call a bare managed `codex` shim recursively. Runtime resolution is
+  explicit and inspectable, and the selected Codex home is passed only to the
+  child. Never modify global Codex auth or config.
+- CLI help and install checks do not start app-server. The MCP server starts it
+  lazily for discovery or a call.
+
+## Conventions and verification
+
+- `agentdesk guide --json` is the one fleet agent contract. `--help`,
+  `--agent-help`, and `--agent-teaser` render it; MCP names are unprefixed.
+- Use Bun with exact dependency pins. `bun run check` is the repository gate.
+- Tests must include a real stdio MCP handshake, app-server protocol fixture,
+  child cleanup/cancellation, elicitation pass-through, image preservation,
+  and installer refusal/idempotence cases. A live smoke may observe the
+  current CUA surface but must not mutate another application.
+- The installer is rerunnable, uses frozen dependencies, publishes an editable
+  `~/.local/bin/agentdesk` link plus a private SHA receipt, and removes only
+  ownership-proved historical Peekaboo artifacts. It never alters TCC grants.
 
 ## After changing this repository
 
-- Installer changes: rerun `scripts/install.sh --install` here, then
-  AgentStart's convergence check
-  (`~/code/agentstart/scripts/install.sh --install`).
-- Skill changes: rerun AgentStart's fixed fleet-resource scan
-  (`~/code/agentstart/scripts/sync-skills`), then confirm the installed resource
-  copy matches this checkout.
+- Run `bun run check` and the narrow live MCP smoke described in the README.
+- Run `scripts/install.sh --install`, then `scripts/install.sh --check`.
+- Ask AgentStart to validate this checkout's guide against
+  `config/agent-contract/schema.json` and to converge its MCP inventory/skills.
+- A cross-project call-edge change updates
+  `~/code/agentstart/skills/fleet/MAP.md` in the AgentStart-owned change.
 
 ## The fleet
 
