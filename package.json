@@ -19,7 +19,7 @@
     "lint": "biome check .",
     "format": "biome check --write src test",
     "typecheck": "tsc --noEmit",
-    "test": "bun test && python3 test/remove-peekaboo.test.py",
+    "test": "bun test",
     "check": "bun run lint && bun run typecheck && bun run test"
   },
   "dependencies": {

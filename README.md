@@ -29,10 +29,9 @@ agentdesk doctor
 ```
 
 Installation creates an editable `~/.local/bin/agentdesk` link and a private
-deployment receipt. It also completes the repository's retained, narrowly
-verified retirement of the old Peekaboo installation. It does not install or
-modify Codex, change Codex authentication or configuration, grant macOS
-permissions, or start a resident service.
+deployment receipt. It does not install or modify Codex, change Codex
+authentication or configuration, grant macOS permissions, or start a resident
+service.
 
 AgentStart owns fleet discovery: it publishes the `agentdesk mcp` entry in its
 single MCP inventory and discovers `skills/desktop/` through the normal

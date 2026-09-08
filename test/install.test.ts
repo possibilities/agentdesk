@@ -36,7 +36,7 @@ function fixture() {
   mkdirSync(stateDir);
   mkdirSync(fakeBin);
   const calls = join(base, "calls");
-  for (const name of ["bun", "python3"]) {
+  for (const name of ["bun"]) {
     const executable = join(fakeBin, name);
     writeFileSync(
       executable,
@@ -104,9 +104,6 @@ test("install creates an exact editable link and private receipt", async () => {
   expect(readFileSync(layout.receipt, "utf8")).toBe(`${expectedSha}\n`);
   expect(lstatSync(layout.receipt).mode & 0o777).toBe(0o600);
   expect(readFileSync(layout.calls, "utf8")).toContain("bun install --frozen-lockfile");
-  expect(readFileSync(layout.calls, "utf8")).toContain(
-    `python3 ${join(root, "scripts", "remove-peekaboo.py")} --install`,
-  );
 });
 
 test("repeated install atomically replaces the receipt", async () => {
@@ -124,10 +121,7 @@ test("check is read-only and does not install dependencies", async () => {
   expect(result.stdout).toContain("bun install --frozen-lockfile");
   expect(existsSync(layout.target)).toBe(false);
   expect(existsSync(layout.receipt)).toBe(false);
-  expect(readFileSync(layout.calls, "utf8")).toContain(
-    `python3 ${join(root, "scripts", "remove-peekaboo.py")} --check`,
-  );
-  expect(readFileSync(layout.calls, "utf8")).not.toContain("bun ");
+  expect(existsSync(layout.calls)).toBe(false);
 });
 
 test("uninstall removes only owned artifacts and is idempotent", async () => {

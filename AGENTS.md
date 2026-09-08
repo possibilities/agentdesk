@@ -7,8 +7,7 @@ Agentdesk is the fleet-owned stdio MCP bridge to Codex Computer Use. It owns:
 - `agentdesk mcp`, a transparent proxy for the current Codex
   `unified-computer-use` / `cua_repl` tools;
 - the fleet CLI contract and a read-only `doctor`;
-- `scripts/install.sh`, the hardened editable-command installer and retained
-  Peekaboo retirement contract;
+- `scripts/install.sh`, the hardened editable-command installer;
 - `skills/desktop/`, the runbook shipped by AgentStart's normal fleet skill
   scan.
 
@@ -44,9 +43,9 @@ writer here.
   child cleanup/cancellation, elicitation pass-through, image preservation,
   and installer refusal/idempotence cases. A live smoke may observe the
   current CUA surface but must not mutate another application.
-- The installer is rerunnable, uses frozen dependencies, publishes an editable
-  `~/.local/bin/agentdesk` link plus a private SHA receipt, and removes only
-  ownership-proved historical Peekaboo artifacts. It never alters TCC grants.
+- The installer is rerunnable, uses frozen dependencies, and publishes an
+  editable `~/.local/bin/agentdesk` link plus a private SHA receipt. It never
+  alters TCC grants.
 
 ## After changing this repository
 

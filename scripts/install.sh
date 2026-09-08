@@ -4,7 +4,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 SOURCE="$ROOT/src/cli.ts"
-RETIREMENT="$SCRIPT_DIR/remove-peekaboo.py"
 BIN_DIR="${AGENTDESK_INSTALL_BIN_DIR:-$HOME/.local/bin}"
 STATE_DIR="${AGENTDESK_INSTALL_STATE_DIR:-$HOME/.local/state/agentdesk}"
 TARGET="$BIN_DIR/agentdesk"
@@ -21,8 +20,7 @@ usage() {
 Usage: scripts/install.sh [--install|--uninstall|--check|--help]
 
 With no option, installs Agentdesk: frozen Bun dependencies, an editable
-~/.local/bin/agentdesk link, a private deployed-SHA receipt, and safe,
-recoverable retirement of verified Peekaboo artifacts.
+~/.local/bin/agentdesk link, and a private deployed-SHA receipt.
 
 Set AGENTDESK_INSTALL_BIN_DIR and AGENTDESK_INSTALL_STATE_DIR to use other
 locations, including for hermetic tests.
@@ -148,7 +146,6 @@ install_agentdesk() {
   local sha
   command -v bun >/dev/null 2>&1 || die "Bun is required but was not found in PATH"
   validate_managed_checkout "$ROOT"; sha="$MANAGED_SHA"
-  validate_safe_file "$RETIREMENT" "Peekaboo retirement helper"
   ensure_directory "$BIN_DIR" bin 755
   ensure_directory "$STATE_DIR" state 700
   classify_command
@@ -170,7 +167,6 @@ install_agentdesk() {
   printf '%s\n' "$sha" | cmp -s - "$TMP_PATH" || die "Temporary deployed receipt failed content verification"
   mv -f -- "$TMP_PATH" "$RECEIPT"; TMP_PATH=""; validate_receipt "$sha"
   printf 'Installed %s at %s.\n' "$TARGET" "$sha"
-  python3 "$RETIREMENT" --install
 }
 
 uninstall_agentdesk() {
@@ -193,7 +189,6 @@ Agentdesk:
   atomically link $TARGET to $SOURCE
   write private deployed Git SHA receipt at $RECEIPT
 EOF
-  python3 "$RETIREMENT" --check
 }
 
 (( $# <= 1 )) || die "Expected at most one installer option" 2
