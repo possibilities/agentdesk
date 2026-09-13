@@ -1,3 +1,5 @@
+> *Slop Made With Sweat: Made with a lot of love by someone who loves code but read none of it.*
+
 # Agentdesk
 
 Agentdesk makes Codex Computer Use available as a standalone stdio MCP server.
