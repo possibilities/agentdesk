@@ -63,6 +63,6 @@ image block to a path or JSON description. Report what the final observation
 proves and what remains uncertain. Keep captures only as long as the task
 requires.
 
-A peer agent's terminal pane is reached through the `bus` workflow, never by
-GUI input. Use `browser` for page interaction and `notify` to reach an away
-human.
+Do not use GUI input to control a peer agent's terminal pane. Use native
+collaboration controls when available, `browser` for page interaction, and
+`notify` to reach an away human.
